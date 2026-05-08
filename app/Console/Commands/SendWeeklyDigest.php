@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Log;
  * Compiles the last N days of activity per team and sends one digest email
  * to each team owner via Mailtrap's template API.
  *
- * A failure for one team is isolated — we log it and continue so the remaining
+ * A failure for one team is isolated - we log it and continue so the remaining
  * teams still get their digest.
  */
 class SendWeeklyDigest extends Command

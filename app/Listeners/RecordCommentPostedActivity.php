@@ -26,7 +26,7 @@ class RecordCommentPostedActivity
                 'task_id' => $task->id,
                 'task_title' => $task->title,
                 'author_name' => $comment->author->name,
-                'excerpt' => mb_strimwidth($comment->body, 0, 140, '…'),
+                'excerpt' => mb_strimwidth($comment->body, 0, 140, '...'),
             ],
         );
     }

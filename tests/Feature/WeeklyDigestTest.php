@@ -34,7 +34,7 @@ class WeeklyDigestTest extends TestCase
         $this->seedActivity($this->acme->id, $this->acmeOwner, now()->subDays(2), 'teammate_invited', ['inviter_name' => 'Alice', 'invitee_name' => 'Carol']);
         $this->seedActivity($this->acme->id, $this->acmeOwner, now()->subDays(1), 'task_assigned', ['task_title' => 'Ship docs', 'assignee_name' => 'Bob']);
 
-        // Globex has only older activity — outside the default 7-day window
+        // Globex has only older activity - outside the default 7-day window
         $this->seedActivity($this->globex->id, $this->globexOwner, now()->subDays(30), 'task_assigned', ['task_title' => 'Old task']);
     }
 
@@ -71,7 +71,7 @@ class WeeklyDigestTest extends TestCase
     public function test_digest_skips_teams_without_recent_activity(): void
     {
         $mailer = $this->mock(NotificationMailer::class);
-        // Only Acme should receive — Globex's only event is 30 days old.
+        // Only Acme should receive - Globex's only event is 30 days old.
         $mailer->shouldReceive('send')->once()->andReturn(true);
 
         $this->artisan('digest:send')->assertExitCode(0);
@@ -105,7 +105,7 @@ class WeeklyDigestTest extends TestCase
 
         $mailer = $this->mock(NotificationMailer::class);
 
-        // Both teams attempted — one fails, the other succeeds. No crash.
+        // Both teams attempted - one fails, the other succeeds. No crash.
         $mailer->shouldReceive('send')
             ->twice()
             ->andReturn(false, true);

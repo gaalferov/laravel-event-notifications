@@ -72,9 +72,9 @@ class AssignTaskRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'task_id.exists' => 'Unknown task — check the ID.',
-            'assigner_email.exists' => 'Unknown assigner — seed the database or use an existing user.',
-            'assignee_email.exists' => 'Unknown assignee — the user does not exist.',
+            'task_id.exists' => 'Unknown task - check the ID.',
+            'assigner_email.exists' => 'Unknown assigner - seed the database or use an existing user.',
+            'assignee_email.exists' => 'Unknown assignee - the user does not exist.',
         ];
     }
 }

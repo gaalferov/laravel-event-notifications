@@ -22,7 +22,7 @@ use Illuminate\Http\JsonResponse;
  * full features.
  *
  * Validation (including email normalization, existence checks, and cross-team
- * guards) lives in the FormRequest classes in app/Http/Requests — the
+ * guards) lives in the FormRequest classes in app/Http/Requests - the
  * controller only deals with persistence and event dispatching.
  */
 class EventSimulatorController extends Controller

@@ -9,7 +9,7 @@ use App\Models\User;
  * Persists activity events for later consumption (weekly digest).
  *
  * Kept separate from notification sending so both concerns can evolve
- * independently — adding a new event type just requires:
+ * independently - adding a new event type just requires:
  *  1. A new Event class
  *  2. A listener that records activity (via this service)
  *  3. A listener that sends a notification (via NotificationMailer)

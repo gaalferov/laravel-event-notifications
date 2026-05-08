@@ -42,7 +42,7 @@ class InviteTeammateRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'inviter_email.exists' => 'Unknown inviter — seed the database or use an existing user.',
+            'inviter_email.exists' => 'Unknown inviter - seed the database or use an existing user.',
             'invitee_email.unique' => 'A user with this email already exists.',
         ];
     }

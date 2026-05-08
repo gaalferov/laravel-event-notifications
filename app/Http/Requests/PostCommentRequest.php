@@ -63,8 +63,8 @@ class PostCommentRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'task_id.exists' => 'Unknown task — check the ID.',
-            'author_email.exists' => 'Unknown author — seed the database or use an existing user.',
+            'task_id.exists' => 'Unknown task - check the ID.',
+            'author_email.exists' => 'Unknown author - seed the database or use an existing user.',
         ];
     }
 }

@@ -33,7 +33,7 @@ class NotificationMailerTest extends TestCase
 
         config([
             'notifications.templates.teammate_invited' => 'tmpl-fake',
-            'services.mailtrap.apiKey' => 'invalid_key',
+            'services.mailtrap.api_key' => 'invalid_key',
             'mail.from.address' => 'no-reply@example.com',
             'mail.from.name' => 'Test',
         ]);

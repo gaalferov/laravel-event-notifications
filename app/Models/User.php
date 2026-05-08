@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Model
 {
+    // `role` is server-controlled. The simulator endpoints set it explicitly
+    // to 'member'; never accept it from request input in real product flows.
     protected $fillable = ['team_id', 'name', 'email', 'role'];
 
     public function team(): BelongsTo

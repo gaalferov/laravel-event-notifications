@@ -21,7 +21,7 @@ class NotificationMailer
         $templateUuid = config("notifications.templates.{$notificationKey}");
 
         if (! $templateUuid) {
-            Log::warning('Mailtrap template UUID not configured — skipping notification', [
+            Log::warning('Mailtrap template UUID not configured - skipping notification', [
                 'notification' => $notificationKey,
                 'recipient' => $recipientEmail,
             ]);
@@ -37,7 +37,9 @@ class NotificationMailer
                 ->templateVariables($variables);
 
             MailtrapClient::initSendingEmails(
-                apiKey: config('services.mailtrap.apiKey'),
+                apiKey: config('services.mailtrap.api_key'),
+                isSandbox: (bool) config('services.mailtrap.sandbox'),
+                inboxId: config('services.mailtrap.inbox_id'),
             )->send($email);
 
             Log::info('Notification email sent', [

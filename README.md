@@ -2,7 +2,7 @@
 
 A Laravel application that demonstrates a classic SaaS notification pattern: domain events (teammate invited, task assigned, comment posted) dispatch through Laravel's event system and trigger transactional emails via [Mailtrap](https://mailtrap.io). A scheduled artisan command compiles a weekly activity digest for each team.
 
-No real product features are built here — the app exposes simulator endpoints so you can exercise the full email integration end-to-end without standing up a whole SaaS.
+No real product features are built here - the app exposes simulator endpoints so you can exercise the full email integration end-to-end without standing up a whole SaaS.
 
 ## How It Works
 
@@ -19,19 +19,19 @@ POST /events/comment             → CommentPosted      ─┬─→ SendComment
                                                       └─→ RecordCommentPostedActivity
 
 php artisan digest:send                               ──→ NotificationMailer (weekly_digest template)
-  (also wired to Laravel's scheduler — runs every Monday at 09:00)
+  (also wired to Laravel's scheduler - runs every Monday at 09:00)
 ```
 
-Each event has two independent listeners. One sends the Mailtrap email, the other records the event for the weekly digest. Failures are isolated — a missing template UUID or a Mailtrap outage in the "send email" listener does not prevent activity from being recorded, and the digest continues to the next team if one team's send fails.
+Each event has two independent listeners. One sends the Mailtrap email, the other records the event for the weekly digest. Failures are isolated - a missing template UUID or a Mailtrap outage in the "send email" listener does not prevent activity from being recorded, and the digest continues to the next team if one team's send fails.
 
 ## Features
 
-- **Event-driven architecture** — Dispatch a Laravel event from anywhere in the app; listeners are auto-discovered from `app/Listeners` by Laravel 11's convention (no manual `Event::listen` calls needed)
-- **Decoupled listeners** — Adding a new notification type means adding an Event class and a Listener class. No existing listener needs to change
-- **Mailtrap templates** — One template UUID per notification type (configurable via env); template variables are populated from event data
-- **Weekly digest** — Scheduled artisan command compiles recent activity per team and sends one digest email per team owner
-- **Isolated failure handling** — `NotificationMailer::send()` returns `bool` and logs errors so a single bad send does not break the batch
-- **Simulator endpoints** — HTTP endpoints that mirror real user actions (invite flow, task assignment, commenting) so the integration can be tested without a real product
+- **Event-driven architecture** - Dispatch a Laravel event from anywhere in the app; listeners are auto-discovered from `app/Listeners` by Laravel 11's convention (no manual `Event::listen` calls needed)
+- **Decoupled listeners** - Adding a new notification type means adding an Event class and a Listener class. No existing listener needs to change
+- **Mailtrap templates** - One template UUID per notification type (configurable via env); template variables are populated from event data
+- **Weekly digest** - Scheduled artisan command compiles recent activity per team and sends one digest email per team owner
+- **Isolated failure handling** - `NotificationMailer::send()` returns `bool` and logs errors so a single bad send does not break the batch
+- **Simulator endpoints** - HTTP endpoints that mirror real user actions (invite flow, task assignment, commenting) so the integration can be tested without a real product
 
 ## Prerequisites
 
@@ -44,7 +44,7 @@ Each event has two independent listeners. One sends the Mailtrap email, the othe
 1. **Clone and install**
 
 ```bash
-git clone https://github.com/mailtrap/laravel-event-notifications.git
+git clone https://github.com/gaalferov/laravel-event-notifications.git
 cd laravel-event-notifications
 composer install
 ```
@@ -87,7 +87,7 @@ php artisan serve
 
 ## Mailtrap Template Setup
 
-Create four Mailtrap templates — one per notification key. Each template has its own variables:
+Create four Mailtrap templates - one per notification key. Each template has its own variables:
 
 | Template env var | Variables available |
 |---|---|
@@ -145,8 +145,8 @@ curl -X POST http://localhost:8000/api/events/comment \
   }'
 ```
 
-> The comment listener skips notifying the task owner if the owner is also the comment author — no "you commented on your own task" spam.
-> To see this in action, author a comment as alice@acme.test on task 1 — she is the task owner; the email send is skipped but the activity is still recorded.
+> The comment listener skips notifying the task owner if the owner is also the comment author - no "you commented on your own task" spam.
+> To see this in action, author a comment as alice@acme.test on task 1 - she is the task owner; the email send is skipped but the activity is still recorded.
 
 ## Weekly Digest
 
@@ -220,13 +220,13 @@ class SendProjectArchivedEmail
 }
 ```
 
-3. **Register the notification in `config/notifications.php`** — add an entry like `'project_archived' => env('MAILTRAP_TEMPLATE_PROJECT_ARCHIVED')`, and set the env var in `.env`. Without this line, `NotificationMailer::send()` will log a warning and skip the send.
+3. **Register the notification in `config/notifications.php`** - add an entry like `'project_archived' => env('MAILTRAP_TEMPLATE_PROJECT_ARCHIVED')`, and set the env var in `.env`. Without this line, `NotificationMailer::send()` will log a warning and skip the send.
 
 > If the new event should appear in the weekly digest, also add a case to `App\Console\Commands\SendWeeklyDigest::typeLabel()` so it renders with a friendly name.
 
-That's it. Laravel 11 auto-discovers listeners in `app/Listeners/` by their `handle()` type hint — no manual registration needed. No existing listener changes.
+That's it. Laravel 11 auto-discovers listeners in `app/Listeners/` by their `handle()` type hint - no manual registration needed. No existing listener changes.
 
-If the new event is triggered from a new simulator endpoint, add a matching FormRequest in `app/Http/Requests/` and type-hint it on the controller action — this sample keeps all input validation, email normalization, and cross-model guards in those FormRequest classes.
+If the new event is triggered from a new simulator endpoint, add a matching FormRequest in `app/Http/Requests/` and type-hint it on the controller action - this sample keeps all input validation, email normalization, and cross-model guards in those FormRequest classes.
 
 ## Project Structure
 
@@ -239,7 +239,7 @@ app/
     TaskAssigned.php
     CommentPosted.php
   Http/Controllers/
-    EventSimulatorController.php      # POST /events/{invite,task-assigned,comment} — persists + dispatches events
+    EventSimulatorController.php      # POST /events/{invite,task-assigned,comment} - persists + dispatches events
   Http/Requests/
     InviteTeammateRequest.php         # Validation + email normalization for /events/invite
     AssignTaskRequest.php             # Validation + cross-team guards for /events/task-assigned
@@ -275,7 +275,17 @@ tests/Feature/
 ./vendor/bin/phpunit
 ```
 
-Tests cover endpoint validation, event dispatching, listener side effects, graceful mail failure, and digest compilation — all without requiring real Mailtrap credentials.
+Tests cover endpoint validation, event dispatching, listener side effects, graceful mail failure, and digest compilation - all without requiring real Mailtrap credentials.
+
+## Production Hardening
+
+This is a demo. Before adapting it for production, consider:
+
+- **Queue the email listeners.** `Send*Email` listeners are synchronous - a slow Mailtrap call will block the HTTP response. Make each `Send*Email` listener `implements ShouldQueue` and run a queue worker so notification delivery happens out-of-band.
+- **Surface mailer failures.** `NotificationMailer::send` returns `false` on failure and the listener ignores the return. For production, wrap delivery in retries or push to a dead-letter queue, and consider alerting on sustained failures.
+- **Lock down the simulator endpoints.** The `/api/events/*` endpoints are wide open by design (this is a demo). In production, gate them behind authentication or replace them with the real product flows that dispatch the same events.
+- **Tune the rate limit.** The default `throttle:api` (60 req/min/IP) is fine for a demo but may need to be higher or per-team-keyed for real traffic.
+- **Log to a structured target.** The default `single` log channel writes to `storage/logs/laravel.log`; production deployments should ship logs to a centralized aggregator and review dashboards for `Failed to send notification email` patterns.
 
 ## Links
 

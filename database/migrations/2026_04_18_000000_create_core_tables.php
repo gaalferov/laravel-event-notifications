@@ -43,7 +43,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // Activity log — used by the weekly digest to compile recent events.
+        // Activity log - used by the weekly digest to compile recent events.
         Schema::create('activity_events', function (Blueprint $table) {
             $table->id();
             $table->foreignId('team_id')->constrained()->cascadeOnDelete();
