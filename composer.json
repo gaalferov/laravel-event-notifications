@@ -10,7 +10,7 @@
         "ext-mbstring": "*",
         "ext-openssl": "*",
         "ext-pdo": "*",
-        "laravel/framework": "^11.0",
+        "laravel/framework": "^12.61",
         "nyholm/psr7": "^1.8",
         "railsware/mailtrap-php": "^3.0",
         "symfony/http-client": "^7.0"
